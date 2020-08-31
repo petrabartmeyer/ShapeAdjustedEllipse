@@ -9,4 +9,4 @@ The subfolder Excel contains a spreadsheet with an example of how to calculate t
 
 The ownership of the results and the implementation in these folders are from Petra Bartmeyer, Natalia Biscola, and Leif Havton.
 
-For detail please contact petra.bartmeyer@gmail.com
+For informations, please contact petra.bartmeyer@gmail.com
