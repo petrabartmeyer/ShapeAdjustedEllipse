@@ -6,7 +6,7 @@ The subfolder Matlab contains the implementation using the Matlab language.  Thi
 The subfolder Excel contains a spreadsheet with an example of calculating the Shape Adjusted Analysis in this platform. *** The assignment option is not available in Excel.
 
 
-Both options available in Julia and Matlab are descrived following:
+The options available in Matlab are descrived following:
 Both folders contain two spreadsheets with examples 'input_assignment.xlsx' and 'input_SAE.csv'. The file 'input_assignment.xlsx' is an instance for the assignment plus the SAE analysis. The file 'input_SAE.csv' is an example of a simple SAE analysis. The difference in the extensions of the files '.xlsx' versus '.csv' is just to illustrate the extensions accepted. 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------
