@@ -2,18 +2,18 @@ clc
 clear all
 
 %%%%%%%%% Set the name of the excel file to be read (input)
-prompt = 'Please, insert the name of the spreadsheet with the extention (input): ';
+prompt = 'Please, insert the name of the spreadsheet without quotes (" ") or (''). The expected extentions are .xlsx, xls, or .csv: ';
 
 name_file = input(prompt, 's');
 
 
-%%%%%%%%%%% Set the name of the file where the information will be saved (output)
-prompt = 'Please, insert the name of the file where the information will be saved (output): ';
+%%%%%%%%%%% Set the name of the file where the information will be saved. 
+prompt = 'Please, insert a name for the output file with the desired extension (.xlsx, xls, or .csv): ';
 output_name = input(prompt, 's');
 f = fopen(output_name,'w');
 
 %%%%%%%%%%% decide about the assigment routine
-prompt = 'Do you like to perform the assigment routine? If yes please insert 1, otherwise please insert 0: ';
+prompt = 'Please insert 1 to analyse myelinated axons. For unmyelinated axons insert 0: ';
 assigment_variable = input(prompt);
 
 
@@ -22,7 +22,7 @@ table = readtable(name_file);
 
 
 %%%%%%%% Set the name of the variable to be read in the input file
-table_results = table(:,{'Area', 'Perim_', 'Feret', 'MinFeret'});
+table_results = table(:,{'Area', 'Perimeter', 'MaxFeret', 'MinFeret'});
 
 [a,~] = size(table_results);
 Axon = [];
@@ -46,11 +46,12 @@ end
 
 
 
-fprintf(f, 'Fiber_area, Fiber_perimeter, Fiber_diameter_MinFeretdistance, Fiber_diameter_Circle, Fiber_diameter_ShapeAdjustedEllipse \n');
+fprintf(f, 'Area; Perimeter; MinFeret; CircleAreaDiameter; CirclePerimeterDiameter; SAEDiameter \n');
 
 for i =1:length(area_Axon)  
     %%%%%%%%%%%%%%%%%%%%%%%%%%% CIRCLE
     circle_Axon = 2*sqrt(area_Axon(i)/3.14);
+    perimeter_Axon = perimeter_Axon(i)/3.14;
     perimeter = perimeter_Axon(i);
     area =  area_Axon(i);
     
@@ -61,7 +62,7 @@ for i =1:length(area_Axon)
     diameter_max_Axon = 2*x;
     if abs(diameter_max_Axon) < 10^4 && diameter_max_Axon > 0.1;
     else
-       diameter_max_Axon = feret_Axon(position_axon);
+       diameter_max_Axon = feret_Axon(i);
     end
       
     diameter_min_Axon = 2*(2*area/(3.14*diameter_max_Axon));
@@ -72,22 +73,23 @@ for i =1:length(area_Axon)
         diameter_max_Axon = aux_max;
     end
     %%%%%%%%%%%%%% print the information
-    fprintf(f, '%f , %f, %f, %f, %f \n', area_Axon(i),  perimeter_Axon(i), feret_MinAxon(i), circle_Axon, diameter_min_Axon);
+    fprintf(f, '%f; %f; %f; %f; %f; %f \n', area_Axon(i),  perimeter_Axon(i), feret_MinAxon(i), circle_Axon, perimeter_Axon, diameter_min_Axon);
 end
 
 fclose(f);
 else
-prompt = 'Please, insert the label for the inner structure: ';
-inner = input(prompt,'s');
+%prompt = 'Please, insert the label for the inner structure: ';
+%inner = input(prompt,'s');
+inner = 'Axon';
 
-
-prompt = 'Please, insert the label for the outer structure: ';
-outer = input(prompt,'s');
+%prompt = 'Please, insert the label for the outer structure: ';
+%outer = input(prompt,'s');
+outer = 'Fiber';
 
 table = readtable(name_file);
 
 %%%%%%%% Set the name of the variable to be read
-table_results = table(:,{'Name', 'Centroid', 'Area__m__', 'Perimeter__m_', 'FeretMin__m_'});
+table_results = table(:,{'Name', 'CentroidX','CentroidY', 'Area', 'Perimeter', 'MinFeret', 'MaxFeret'});
 
 [aa,~] = size(table_results);
 Axon = [];
@@ -100,51 +102,30 @@ perimeter_Fiber = [];
 
 feret_Axon = [];
 feret_Fiber = [];
-
+x= table_results(:,2);
+y = table_results(:,3);    
+area = table_results(:,4);
 for i=1:aa
-    centroid =  table_results(i,2);
-    area = cell2mat(table_results(i,3));
-    TheString = char(centroid);
-     fmt1 = '(%f,%f,%f)';
-    fmt2 = '[%f %f %f]';
-    fmt3 = '[%f]';
-    fmt4 = '%f';
-    parts = sscanf(TheString, fmt1);
-    if isempty(parts)
-      parts = sscanf(TheString, fmt2);
-    end
-    if length(parts) < 2
-      error('Sorry, that is not a range I recognize')
-    end
-    if length(parts) == 2
-      range = parts(1) : parts(2);
-    else
-      x = parts(1) ;
-      y = parts(2);
-    end
-    
-    
     if strcmp(inner,table_results(i,1))
-      Axon = [Axon; x y];
-      area_Axon = [area_Axon area];
-      feret_Axon = [feret_Axon cell2mat(table_results(i,5))];
-      perimeter_Axon = [perimeter_Axon cell2mat(table_results(i,4))];
+      Axon = [Axon; x{i}(1) y{i}(1)];
+      area_Axon = [area_Axon area{i}(1)];
+      feret_Axon = [feret_Axon cell2mat(table_results(i,6))];
+      perimeter_Axon = [perimeter_Axon cell2mat(table_results(i,5))];
    else
        if strcmp(outer,table_results(i,1))
-           Fiber = [Fiber; x y];
-           area_Fiber = [area_Fiber area];
-           feret_Fiber = [feret_Fiber cell2mat(table_results(i,5))];
-           perimeter_Fiber = [perimeter_Fiber cell2mat(table_results(i,4))];
+           Fiber = [Fiber; x{i}(1) y{i}(1)];
+           area_Fiber = [area_Fiber area{i}(1)];
+           feret_Fiber = [feret_Fiber cell2mat(table_results(i,6))];
+           perimeter_Fiber = [perimeter_Fiber cell2mat(table_results(i,5))];
        end
    end
-       
+      
 end
-
 [a,b] = size(Fiber);
 [c,d]= size(Axon);
 
 if a ~=c
-   println('The number of Axon and Fiber axons is different') 
+   display('The number of Axon and Fiber axons is different') 
 else
     distance = 10^6*ones(a,c);
     for i=1:a
@@ -161,7 +142,7 @@ end
 
 %%%%%%%%%%% Set the name of the file where the information will be saved
 f = fopen(output_name,'w');
-fprintf(f, 'Area_Axon, Area_Fiber, CentroidX, CentroidY, Perimeter_Fiber, Perimeter_Axon, Fiber_MinFeretdistance, Axon_MinFeretdistance, MyelinThickness_MinFeretdistance, MinFeretdistance_gratio, Fiber_circle_diameter, Axon_circle_diameter, MyelinThickness_Circle, Circle_gratio,  ShapeAdjustedEllipse_Fiber, ShapeAdjustedEllipse_Axon, MyelinThickness_ShapeAdjustedEllipse, ShapeAdjustedEllipse_gratio \n');
+fprintf(f, 'Area_Axon; Area_Fiber; CentroidX; CentroidY; Perimeter_Fiber; Perimeter_Axon; Fiber_MinFeretdistance; Axon_MinFeretdistance; MyelinThickness_MinFeretdistance; MinFeretdistance_gratio; Fiber_circleArea_diameter; Axon_circleArea_diameter; MyelinThickness_CircleArea; CircleArea_gratio; Fiber_circlePerimeter_diameter; Axon_circlePerimeter_diameter; MyelinThickness_CirclePerimeter; CirclePerimeter_gratio;   ShapeAdjustedEllipse_Fiber; ShapeAdjustedEllipse_Axon; MyelinThickness_ShapeAdjustedEllipse; ShapeAdjustedEllipse_gratio \n');
 
 
 [enter,out] = linear_sum_assignment(distance);
@@ -170,11 +151,18 @@ for i =1:a
     position_fiber = enter(i);
     position_axon =  out(i);
 
-    %%%%%%%%%%%%%%%%%%%%%%%%%%% CIRCLE
+    %%%%%%%%%%%%%%%%%%%%%%%%%%% CIRCLE AREA
     circle_Axon = 2*sqrt(area_Axon(position_axon)/3.14);
     circle_Fiber = 2*sqrt(area_Fiber(position_fiber)/3.14);
     thickness_circle = (circle_Fiber-circle_Axon) /2;
     circle_gratio = circle_Axon/circle_Fiber;
+    
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%% CIRCLE PERIMETER
+    perimeter_Axon = area_Axon(position_axon)/3.14;
+    perimeter_Fiber = area_Fiber(position_fiber)/3.14;
+    thickness_perimeter = (perimeter_Fiber-perimeter_Axon) /2;
+    perimeter_gratio = perimeter_Axon/perimeter_Fiber;
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FERET
     feret_gratio = feret_Axon(position_axon)/feret_Fiber(position_fiber);
@@ -214,7 +202,7 @@ for i =1:a
     shapeadjusted_gratio = diameter_min_Axon/diameter_min_Fiber;
     
     %%%%%%%%%%%%%% print the information
-    fprintf(f, '%f, %f, %f, %f, %f, %f, %f,%f, %f, %f, %f, %f, %f, %f, %f, %f, %f, %f \n', area_Axon(position_axon), area_Fiber(position_axon), Axon(position_axon,1), Axon(position_axon,2), perimeter_Fiber(position_fiber), perimeter_Axon(position_axon), feret_Fiber(position_fiber), feret_Axon(position_axon), thickness_feret, feret_gratio, circle_Fiber, circle_Axon, thickness_circle, circle_gratio, diameter_min_Fiber, diameter_min_Axon, thickness_shapeadjusted, shapeadjusted_gratio);
+    fprintf(f, '%f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f \n', area_Axon(position_axon), area_Fiber(position_axon), Axon(position_axon,1), Axon(position_axon,2), perimeter_Fiber(position_fiber), perimeter_Axon(position_axon), feret_Fiber(position_fiber), feret_Axon(position_axon), thickness_feret, feret_gratio, circle_Fiber, circle_Axon, thickness_circle, circle_gratio, perimeter_Fiber, perimeter_Axon, thickness_perimeter, perimeter_gratio, diameter_min_Fiber, diameter_min_Axon, thickness_shapeadjusted, shapeadjusted_gratio);
 end
 
 fclose(f);
