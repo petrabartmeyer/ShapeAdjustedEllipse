@@ -27,3 +27,6 @@ The user has to assure that the columns' labelings are correct, as well as the l
 
 The ownership of the results and the implementation in these folders are from Petra Bartmeyer, Natalia Biscola, and Leif Havton.
 For futher informations about the codes, please contact petra.bartmeyer<at>gmail.com. For informations about the biological data, please contact leif.havton<at>mssm.edu or natalia.biscola<at>mssm.edu
+  
+  If you are using the Shape Adjusted Ellipse method or the code in this repository please cite:  
+  Bartmeyer, Petra M., Natalia P. Biscola, and Leif A. Havton. "A shape-adjusted ellipse approach corrects for varied axonal dispersion angles and myelination in primate nerve roots." Scientific reports 11.1 (2021): 1-12.
