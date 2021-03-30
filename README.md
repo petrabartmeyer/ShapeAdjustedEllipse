@@ -1,5 +1,5 @@
 # ShapeAdjustedEllipse
-This folder contains implementations for the shape adjusted ellipse method to calculate the axon diameter for Julia, Matlab, and Excel.
+This folder contains implementations for the shape adjusted ellipse method to calculate the axon diameter for Julia, Matlab, and Excel. The ideas were developed in the paper "A shape-adjusted ellipse approach corrects for varied axonal dispersion angles and myelination in primate nerve roots"   https://www.nature.com/articles/s41598-021-82575-9.
 
 The subfolder Julia contains the implementation using the Julia language, using the packages Roots.jl. This routine can made deliver the Shape Adjusted Analysis and also the assignment between inner and outer structures.
 The subfolder Matlab contains the implementation using the Matlab language.  This routine can deliver the Shape Adjusted Analysis and the Assignment between inner and outer structures.
