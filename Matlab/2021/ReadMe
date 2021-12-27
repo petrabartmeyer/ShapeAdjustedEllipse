@@ -1,1 +1,32 @@
 
+
+The main file is called shape_adjusted_calculation.m. It contains two mais functions, one for myelinated axons and another for unmyelinated axons.
+
+
+The routine for myelinated axons will require a secondary function called linear_sum_assignment.m. This routine uses the Hungarian Method to link the Fiber and Axon measuraments for the same structure.
+
+
+How to run the analysis.
+
+1- Open the file shape_adjusted_calculation.m in the Matlab
+2- Use the botton RUN (the green arrow on the EDITOR tab)
+3- The command window will display the following questions:
+ a- Please, insert the name of the spreadsheet without quotes (" ") or (''). The expected extentions are .xlsx, xls, or .csv: 
+ b- Please, insert a name for the output file with the desired extension (.xlsx, xls, or .csv): 
+ c- Please insert 1 to analyse myelinated axons. For unmyelinated axons insert 0: 
+ 
+ After each one of the question you have to insert the desired answer and press ther ENTER key
+ 
+ 4- The message "The analysis will start now..." will appear in the command window, indicating that there is no need of extra manual input
+ 5- The message "Your analysis is finished." indicates that the analysis is finished and the spreadsheet is already available in the folder indicated in the step 3b
+© 2021 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Docs
+Contact GitHub
+Pricing
+API
+Training
+Blog
