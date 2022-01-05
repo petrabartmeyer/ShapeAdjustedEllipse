@@ -11,7 +11,7 @@ How to run the analysis.
 3- The command window will display the following questions:
  a- Please, insert the name of the spreadsheet without quotes (" ") or (''). The expected extentions are .xlsx, xls, or .csv: 
  b- Please, insert a name for the output file with the desired extension (.xlsx, xls, or .csv): 
- c- Please insert 1 to analyse myelinated axons. For unmyelinated axons insert 0: 
+ c- For analysing all the data points insert 0. For matching inner and outer contours insert 1: 
  
  After each one of the question you have to insert the desired answer and press ther ENTER key
  
