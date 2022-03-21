@@ -40,7 +40,7 @@ tic
 %feret_Axon = [];
 %feret_MinAxon = [];
 unmyelinated = 'Unmyelinated Axon'; 
-fprintf(f, 'Name; CenterX; CenterY; Area; Perimeter; MinFeret; CircleAreaDiameter; CirclePerimeterDiameter; SAEDiameter; PerimeterError; AreaError \n');
+fprintf(f, 'Name;CenterX;CenterY;Area;Perimeter;MinFeret;CircleAreaDiameter;CirclePerimeterDiameter;SAEDiameter;PerimeterError;AreaError \n');
 count = 0;
 
 for i=1:a    
@@ -174,7 +174,7 @@ else
     for i=1:a
         for j = 1: c
             if area_Axon(j) > area_Fiber(i)
-                distance(i,j) = sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2)+ (area_Fiber(i)-area_Axon(j))^3;
+                distance(i,j) = 10^8;%sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2)+ (area_Fiber(i)-area_Axon(j))^3;
             else
                  distance(i,j) = sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2);
             end
@@ -220,7 +220,7 @@ for i =1:a
     x = fzero(fun, circle_Axon2);
   
     diameter_max_Axon = 2*x;
-    diameter_min_Axon = 2*area/(3.14*diameter_max_Axon);
+    diameter_min_Axon = 2*(2*area/(3.14*diameter_max_Axon));
     if diameter_min_Axon > diameter_max_Axon
         aux_max = diameter_min_Axon;
         diameter_min_Axon = diameter_max_Axon;
@@ -235,13 +235,13 @@ for i =1:a
     x = fzero(fun, circle_Fiber2);
         
     diameter_max_Fiber = 2*x;
-    diameter_min_Fiber = 2*area/(3.14*diameter_max_Fiber);
+    diameter_min_Fiber = 2*(2*area/(3.14*diameter_max_Fiber));
     if diameter_min_Fiber > diameter_max_Fiber
         aux_max = diameter_min_Fiber;
         diameter_min_Fiber = diameter_max_Fiber;
         diameter_max_Fiber = aux_max;
     end
-    thickness_shapeadjusted = (diameter_min_Fiber  -diameter_min_Axon) /2;
+    thickness_shapeadjusted = (diameter_min_Fiber-diameter_min_Axon) /2;
     shapeadjusted_gratio = diameter_min_Axon/diameter_min_Fiber;
     
     %%%%%%%%%%%%%% print the information
