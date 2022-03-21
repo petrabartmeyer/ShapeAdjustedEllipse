@@ -114,7 +114,7 @@ if (area_Axon > 0.005)
     area_error = area - pi*diameter_max_Axon*diameter_min_Axon*0.25 ;
     %%%%%%%%%%%%%% print the information
 %    fprintf(f, '%f; %f; %f; %f; %f; %f \n', area_Axon(i),  perimeter_Axon(i), feret_MinAxon(i), circle_Axon, perimeter_Axon, diameter_min_Axon);
-    fprintf(f, '%s; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f \n',table_results{i,5}, Axon(1), Axon(2), area_Axon,  perimeter_Axon, feret_MinAxon, circle_Axon, perimeter_Axon2, diameter_min_Axon, perimeter_error, area_error);
+    fprintf(f, '%s;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f \n',table_results{i,5}, Axon(1), Axon(2), area_Axon,  perimeter_Axon, feret_MinAxon, circle_Axon, perimeter_Axon2, diameter_min_Axon, perimeter_error, area_error);
     end
 end
 toc
@@ -170,11 +170,11 @@ if a ~=c
    fprintf('The number of Axon and Fiber axons is different') 
    return
 else
-    distance = 10^6*ones(a,c);
+    distance = ones(a,c);
     for i=1:a
         for j = 1: c
             if area_Axon(j) > area_Fiber(i)
-                distance(i,j) = sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2)+ (area_Fiber(i)-area_Axon(i))^2;
+                distance(i,j) = sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2)+ (area_Fiber(i)-area_Axon(j))^3;
             else
                  distance(i,j) = sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2);
             end
@@ -185,7 +185,7 @@ end
 
 %%%%%%%%%%% Set the name of the file where the information will be saved
 f = fopen(output_name,'w');
-fprintf(f, 'Area_Axon; Area_Fiber; CentroidX; CentroidY; Perimeter_Fiber; Perimeter_Axon; Fiber_MinFeretdistance; Axon_MinFeretdistance; MyelinThickness_MinFeretdistance; MinFeretdistance_gratio; Fiber_circleArea_diameter; Axon_circleArea_diameter; MyelinThickness_CircleArea; CircleArea_gratio; Fiber_circlePerimeter_diameter; Axon_circlePerimeter_diameter; MyelinThickness_CirclePerimeter; CirclePerimeter_gratio;   ShapeAdjustedEllipse_Fiber; ShapeAdjustedEllipse_Axon; MyelinThickness_ShapeAdjustedEllipse; ShapeAdjustedEllipse_gratio \n');
+fprintf(f, 'Area_Axon;Area_Fiber;CentroidX;CentroidY;Perimeter_Fiber;Perimeter_Axon;Fiber_MinFeretdistance;Axon_MinFeretdistance;MyelinThickness_MinFeretdistance;MinFeretdistance_gratio;Fiber_circleArea_diameter;Axon_circleArea_diameter;MyelinThickness_CircleArea;CircleArea_gratio;Fiber_circlePerimeter_diameter;Axon_circlePerimeter_diameter;MyelinThickness_CirclePerimeter;CirclePerimeter_gratio;ShapeAdjustedEllipse_Fiber;ShapeAdjustedEllipse_Axon;MyelinThickness_ShapeAdjustedEllipse;ShapeAdjustedEllipse_gratio \n');
 
 
 [enter,out] = linear_sum_assignment(distance);
@@ -245,7 +245,7 @@ for i =1:a
     shapeadjusted_gratio = diameter_min_Axon/diameter_min_Fiber;
     
     %%%%%%%%%%%%%% print the information
-    fprintf(f, '%f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f \n', area_Axon(position_axon), area_Fiber(position_axon), Axon(position_axon,1), Axon(position_axon,2), perimeter_Fiber(position_fiber), perimeter_Axon(position_axon), feret_Fiber(position_fiber), feret_Axon(position_axon), thickness_feret, feret_gratio, circle_Fiber2, circle_Axon2, thickness_circle, circle_gratio, perimeter_Fiber2, perimeter_Axon2, thickness_perimeter, perimeter_gratio, diameter_min_Fiber, diameter_min_Axon, thickness_shapeadjusted, shapeadjusted_gratio);
+    fprintf(f, '%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f;%f \n', area_Axon(position_axon), area_Fiber(position_axon), Axon(position_axon,1), Axon(position_axon,2), perimeter_Fiber(position_fiber), perimeter_Axon(position_axon), feret_Fiber(position_fiber), feret_Axon(position_axon), thickness_feret, feret_gratio, circle_Fiber2, circle_Axon2, thickness_circle, circle_gratio, perimeter_Fiber2, perimeter_Axon2, thickness_perimeter, perimeter_gratio, diameter_min_Fiber, diameter_min_Axon, thickness_shapeadjusted, shapeadjusted_gratio);
     end
 end
 
