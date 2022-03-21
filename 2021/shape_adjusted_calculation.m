@@ -3,7 +3,7 @@ clear all
 
 %%%%%%%%% Set the name of the excel file to be read (input)
 
-fprintf('Please, insert the name of the spreadsheet without quotes (" ") or ('').')
+fprintf('Please, insert the name of the spreadsheet without quotes (" ") or (''). \n')
 prompt = 'The expected extentions are .xlsx, xls, or .csv: ';
 
 name_file = input(prompt, 's');
@@ -26,7 +26,7 @@ table = readtable(name_file);
 
 
 %%%%%%%% Set the name of the variable to be read in the input file
-table_results = table(:,{'Area', 'Perimeter', 'MaxFeret', 'MinFeret','Name', 'CentroidX','CentroidY'});
+table_results = table(:,{'Area', 'Perimeter', 'FeretMax', 'FeretMin','Name', 'CentroidX','CentroidY'});
 
 [a,~] = size(table_results);
 Axon = [];
@@ -122,16 +122,16 @@ fclose(f);
 else
 %prompt = 'Please, insert the label for the inner structure: ';
 %inner = input(prompt,'s');
-inner = 'Inner Myelinated Axon';
+inner = 'Axon';
 
 %prompt = 'Please, insert the label for the outer structure: ';
 %outer = input(prompt,'s');
-outer = 'Outer Myelinated Axon';
+outer = 'Fiber';
 
 table = readtable(name_file);
 
 %%%%%%%% Set the name of the variable to be read
-table_results = table(:,{'Name', 'CentroidX','CentroidY', 'Area', 'Perimeter', 'MinFeret', 'MaxFeret'});
+table_results = table(:,{'Name', 'CentroidX','CentroidY', 'Area', 'Perimeter', 'FeretMin', 'FeretMax'});
 
 [aa,~] = size(table_results);
 Axon = [];
@@ -193,19 +193,19 @@ fprintf(f, 'Area_Axon; Area_Fiber; CentroidX; CentroidY; Perimeter_Fiber; Perime
 for i =1:a  
     position_fiber = enter(i);
     position_axon =  out(i);
-
+    if (area_Axon(position_axon) > 0.001) && (area_Fiber(position_fiber) >0.0001)
     %%%%%%%%%%%%%%%%%%%%%%%%%%% CIRCLE AREA
-    circle_Axon = 2*sqrt(area_Axon(position_axon)/3.14);
-    circle_Fiber = 2*sqrt(area_Fiber(position_fiber)/3.14);
-    thickness_circle = (circle_Fiber-circle_Axon) /2;
-    circle_gratio = circle_Axon/circle_Fiber;
+    circle_Axon2 = 2*sqrt(area_Axon(position_axon)/3.14);
+    circle_Fiber2 = 2*sqrt(area_Fiber(position_fiber)/3.14);
+    thickness_circle = (circle_Fiber2-circle_Axon2) /2;
+    circle_gratio = circle_Axon2/circle_Fiber2;
     
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%% CIRCLE PERIMETER
-    perimeter_Axon = area_Axon(position_axon)/3.14;
-    perimeter_Fiber = area_Fiber(position_fiber)/3.14;
-    thickness_perimeter = (perimeter_Fiber-perimeter_Axon) /2;
-    perimeter_gratio = perimeter_Axon/perimeter_Fiber;
+    perimeter_Axon2 = area_Axon(position_axon)/3.14;
+    perimeter_Fiber2 = area_Fiber(position_fiber)/3.14;
+    thickness_perimeter = (perimeter_Fiber2-perimeter_Axon2) /2;
+    perimeter_gratio = perimeter_Axon2/perimeter_Fiber2;
     
     %%%%%%%%%%%%%%%%%%%%%%%%%%%%% FERET
     feret_gratio = feret_Axon(position_axon)/feret_Fiber(position_fiber);
@@ -217,7 +217,7 @@ for i =1:a
     area =  area_Axon(position_axon);
     fun = @(x)(-perimeter + 4*(area*pi^2*x^2 + area^2 -2*area*x^2*pi +pi^2*x^4)/(area*pi*x+pi^2*x^3));
     %fun = @(x)(4*pi^2*x^4 - pi^2*perimeter*x^3 -(18+2*pi)*area*pi*x^2 - pi*area*perimeter*x + 4*area^2 );
-    x = fzero(fun, circle_Axon);
+    x = fzero(fun, circle_Axon2);
   
     diameter_max_Axon = 2*x;
     diameter_min_Axon = 2*area/(3.14*diameter_max_Axon);
@@ -232,7 +232,7 @@ for i =1:a
     area =  area_Fiber(position_fiber);
    fun = @(x)(-perimeter + 4*(area*pi^2*x^2 + area^2 -2*area*x^2*pi +pi^2*x^4)/(area*pi*x+pi^2*x^3));
 
-    x = fzero(fun, circle_Fiber);
+    x = fzero(fun, circle_Fiber2);
         
     diameter_max_Fiber = 2*x;
     diameter_min_Fiber = 2*area/(3.14*diameter_max_Fiber);
@@ -245,7 +245,8 @@ for i =1:a
     shapeadjusted_gratio = diameter_min_Axon/diameter_min_Fiber;
     
     %%%%%%%%%%%%%% print the information
-    fprintf(f, '%f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f \n', area_Axon(position_axon), area_Fiber(position_axon), Axon(position_axon,1), Axon(position_axon,2), perimeter_Fiber(position_fiber), perimeter_Axon(position_axon), feret_Fiber(position_fiber), feret_Axon(position_axon), thickness_feret, feret_gratio, circle_Fiber, circle_Axon, thickness_circle, circle_gratio, perimeter_Fiber, perimeter_Axon, thickness_perimeter, perimeter_gratio, diameter_min_Fiber, diameter_min_Axon, thickness_shapeadjusted, shapeadjusted_gratio);
+    fprintf(f, '%f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f; %f \n', area_Axon(position_axon), area_Fiber(position_axon), Axon(position_axon,1), Axon(position_axon,2), perimeter_Fiber(position_fiber), perimeter_Axon(position_axon), feret_Fiber(position_fiber), feret_Axon(position_axon), thickness_feret, feret_gratio, circle_Fiber2, circle_Axon2, thickness_circle, circle_gratio, perimeter_Fiber2, perimeter_Axon2, thickness_perimeter, perimeter_gratio, diameter_min_Fiber, diameter_min_Axon, thickness_shapeadjusted, shapeadjusted_gratio);
+    end
 end
 
 fclose(f);
