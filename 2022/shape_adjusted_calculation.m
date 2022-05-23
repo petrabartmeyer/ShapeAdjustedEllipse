@@ -174,7 +174,7 @@ else
     for i=1:a
         for j = 1: c
             if area_Axon(j) > area_Fiber(i)
-                distance(i,j) = 10^8;%sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2)+ (area_Fiber(i)-area_Axon(j))^3;
+                distance(i,j) = sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2)+ (area_Fiber(i)-area_Axon(j))^2;
             else
                  distance(i,j) = sqrt((Fiber(i,1)- Axon(j,1))^2+(Fiber(i,2)- Axon(j,2))^2);
             end
@@ -193,7 +193,7 @@ fprintf(f, 'Area_Axon;Area_Fiber;CentroidX;CentroidY;Perimeter_Fiber;Perimeter_A
 for i =1:a  
     position_fiber = enter(i);
     position_axon =  out(i);
-    if (area_Axon(position_axon) > 0.001) && (area_Fiber(position_fiber) >0.0001)
+    if (area_Axon(position_axon) > 0.001) && (area_Fiber(position_fiber) >0.0001) && (area_Fiber(position_fiber) > area_Axon(position_axon))
     %%%%%%%%%%%%%%%%%%%%%%%%%%% CIRCLE AREA
     circle_Axon2 = 2*sqrt(area_Axon(position_axon)/3.14);
     circle_Fiber2 = 2*sqrt(area_Fiber(position_fiber)/3.14);
@@ -236,9 +236,9 @@ for i =1:a
     area =  area_Fiber(position_fiber);
    %fun = @(x)(-perimeter + 4*(area*pi^2*x^2 + area^2 -2*area*x^2*pi +pi^2*x^4)/(area*pi*x+pi^2*x^3));
     fun = @(x)(-perimeter + (2/x)*sqrt((area^2+x^4*9.86)/2));
-    x = fzero(fun, feret_Fiber(position_axon));
+    x = fzero(fun, feret_Fiber(position_fiber));
         if x<=0.01
-            x = feret_Fiber(position_axon)/2;
+            x = feret_Fiber(position_fiber)/2;
         end
     diameter_max_Fiber = 2*x;
     diameter_min_Fiber = 2*area/(3.14*x);
@@ -247,6 +247,11 @@ for i =1:a
         diameter_min_Fiber = diameter_max_Fiber;
         diameter_max_Fiber = aux_max;
     end
+    if (diameter_min_Fiber  -diameter_min_Axon) < 0
+        diameter_min_Fiber = feret_Fiber(position_fiber)/2;
+        diameter_min_Axon = feret_Axon(position_axon)/2;
+    end
+
     thickness_shapeadjusted = (diameter_min_Fiber  -diameter_min_Axon) /2;
     shapeadjusted_gratio = diameter_min_Axon/diameter_min_Fiber;
     
